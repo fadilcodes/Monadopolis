@@ -22,6 +22,7 @@ export interface PlayerState {
 
 export default function Home() {
   const { address, isConnected } = useAccount();
+  const [mounted, setMounted] = useState<boolean>(false);
   const [tokens, setTokens] = useState<number>(25);
   const [currentQuestion, setCurrentQuestion] = useState<QuizQuestion | null>(null);
   const [loadingQuiz, setLoadingQuiz] = useState<boolean>(true);
@@ -47,6 +48,11 @@ export default function Home() {
   // Web3 Monad Contract Hooks
   const { voteOnChain, isPending: isVotePending, error: voteError } = useCityVote();
   const { mintBuilding, isPending: isMintPending, isSuccess: isMintSuccess, hash: mintHash } = useBuildingNFT();
+
+  // Prevent SSR hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Check if connected player already has a Faction and Username in Supabase
   useEffect(() => {
@@ -88,8 +94,10 @@ export default function Home() {
         console.warn("Gagal mengecek profil pemain:", err);
       }
     }
-    checkUserProfile();
-  }, [address]);
+    if (mounted) {
+      checkUserProfile();
+    }
+  }, [address, mounted]);
 
   // Fetch all player records for Multiplayer City View
   const fetchAllPlayers = useCallback(async () => {
@@ -257,7 +265,7 @@ export default function Home() {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  const activeUserWallet = address ? address.toLowerCase() : "0x0000...demo";
+  const activeUserWallet = mounted && address ? address.toLowerCase() : "0x0000...demo";
   const displayPlayers = [...allPlayers];
   if (!displayPlayers.some((p) => p.wallet_address === activeUserWallet)) {
     displayPlayers.unshift({
@@ -274,7 +282,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-pixel-lightbrown text-pixel-darkbrown p-4 md:p-6 flex flex-col gap-6 selection:bg-pixel-brown selection:text-pixel-white">
       {/* User Onboarding Modals */}
-      {address && (
+      {mounted && address && (
         <>
           <UserProfileModal
             isOpen={showUsernameModal}
@@ -317,7 +325,7 @@ export default function Home() {
 
         <div className="flex items-center gap-3 flex-wrap">
           {userName && (
-            <div className="pixel-box px-3 py-2 text-xs border-2 border-pixel-gold bg-pixel-cream text-pixel-black font-bold flex items-center gap-1">
+            <div suppressHydrationWarning className="pixel-box px-3 py-2 text-xs border-2 border-pixel-gold bg-pixel-cream text-pixel-black font-bold flex items-center gap-1">
               <span className="text-pixel-brown">PEMAIN:</span>
               <span className="text-pixel-black font-bold">{userName}</span>
             </div>
@@ -406,7 +414,7 @@ export default function Home() {
                   return (
                     <div key={pIdx} className="flex flex-col items-center group">
                       {/* Top Label & Score */}
-                      <div className="text-[9px] font-bold mb-1 bg-pixel-black text-pixel-gold px-1.5 py-0.5 border border-pixel-gold whitespace-nowrap flex items-center gap-1">
+                      <div suppressHydrationWarning className="text-[9px] font-bold mb-1 bg-pixel-black text-pixel-gold px-1.5 py-0.5 border border-pixel-gold whitespace-nowrap flex items-center gap-1">
                         {factionObj && <span>{factionObj.badge}</span>}
                         <span>{isCurrentUser ? "GEDUNG SAYA" : displayName}</span>
                         <span>({playerTokens} PKT)</span>
@@ -464,7 +472,7 @@ export default function Home() {
                           isCurrentUser ? "bg-pixel-gold text-pixel-black" : "bg-pixel-cream text-pixel-darkbrown"
                         }`}
                       >
-                        <span className="text-[8px] font-bold tracking-tight truncate max-w-[120px]">
+                        <span suppressHydrationWarning className="text-[8px] font-bold tracking-tight truncate max-w-[120px]">
                           {displayName}
                         </span>
                         <div className="w-5 h-3 bg-pixel-black border-t border-x border-pixel-gold flex items-center justify-center mt-0.5">
