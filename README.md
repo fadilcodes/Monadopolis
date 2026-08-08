@@ -59,11 +59,11 @@ The core smart contract **`Monadopolis.sol`** combines ERC-721 Building NFT mint
 | Parameter | Value |
 | :--- | :--- |
 | **Contract Name** | `Monadopolis` |
-| **Contract Address** | `0x06654EeABE960552c9B9E639FaA71de2EeAdE8e4` |
+| **Contract Address** | `0xf09E0f2f019ab9E829307362D823F3a0b585001f` |
 | **Network** | Monad Testnet |
 | **Chain ID** | `10143` |
 | **RPC Endpoint** | `https://testnet-rpc.monad.xyz` |
-| **Monad Explorer** | [https://testnet.monadscan.com/address/0x06654EeABE960552c9B9E639FaA71de2EeAdE8e4](https://testnet.monadscan.com/address/0x06654EeABE960552c9B9E639FaA71de2EeAdE8e4) |
+| **Monad Explorer** | [https://testnet.monadscan.com/address/0xf09E0f2f019ab9E829307362D823F3a0b585001f](https://testnet.monadscan.com/address/0xf09E0f2f019ab9E829307362D823F3a0b585001f) |
 
 ---
 

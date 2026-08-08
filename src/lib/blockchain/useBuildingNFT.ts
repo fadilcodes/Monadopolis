@@ -14,6 +14,7 @@ export function useBuildingNFT() {
       abi: MONADOPOLIS_ABI,
       functionName: "mintBuilding",
       args: [recipient],
+      gas: BigInt(500000),
     });
   };
 

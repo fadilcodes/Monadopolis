@@ -32,7 +32,17 @@ contract Monadopolis is ERC721, Ownable {
     event VoteCast(uint256 indexed disasterId, address indexed player, uint8 optionIndex);
     event DisasterResolved(uint256 indexed disasterId, uint8 winningOption, uint256 maxVotes);
 
-    constructor() ERC721("Monadopolis City Building", "MPOL") Ownable(msg.sender) {}
+    constructor() ERC721("Monadopolis City Building", "MPOL") Ownable(msg.sender) {
+        // Auto-initialize Disaster #1 so on-chain voting works out of the box!
+        currentDisasterId = 1;
+        Disaster storage disaster = disasters[1];
+        disaster.id = 1;
+        disaster.title = "Badai Listrik AI Monadopolis";
+        disaster.isActive = true;
+        disaster.isResolved = false;
+        disaster.createdAt = block.timestamp;
+        emit DisasterStarted(1, disaster.title);
+    }
 
     /**
      * @dev Mencetak NFT Gedung Permanen untuk pemain yang mencapai 100 token poin.
@@ -69,6 +79,13 @@ contract Monadopolis is ERC721, Ownable {
      * @dev Memberikan suara voting solusi bencana. Satu wallet hanya bisa vote 1x per bencana.
      */
     function voteSolution(uint256 disasterId, uint8 optionIndex) external {
+        // Auto-activate disaster 1 if not yet created on legacy instance
+        if (disasterId == 1 && !disasters[1].isActive && !disasters[1].isResolved) {
+            disasters[1].id = 1;
+            disasters[1].title = "Badai Listrik AI Monadopolis";
+            disasters[1].isActive = true;
+        }
+
         Disaster storage disaster = disasters[disasterId];
         require(disaster.isActive, "Sesi bencana tidak aktif");
         require(!hasVoted[disasterId][msg.sender], "Anda sudah memberikan suara");

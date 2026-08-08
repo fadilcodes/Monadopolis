@@ -14,6 +14,7 @@ export function useCityVote() {
       abi: MONADOPOLIS_ABI,
       functionName: "voteSolution",
       args: [disasterId, optionIndex],
+      gas: BigInt(500000),
     });
   };
 
