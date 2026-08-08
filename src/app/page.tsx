@@ -45,7 +45,7 @@ export default function Home() {
   const [disasterMsg, setDisasterMsg] = useState<string | null>(null);
 
   // Web3 Monad Contract Hooks
-  const { voteOnChain, isPending: isVotePending } = useCityVote();
+  const { voteOnChain, isPending: isVotePending, error: voteError } = useCityVote();
   const { mintBuilding, isPending: isMintPending, isSuccess: isMintSuccess, hash: mintHash } = useBuildingNFT();
 
   // Check if connected player already has a Faction and Username in Supabase
@@ -550,6 +550,12 @@ export default function Home() {
                   <p className="text-xs font-bold text-pixel-gold text-center animate-pulse">
                     MENUNGGU TRANSAKSI SIGN VOTE ON-CHAIN DI MONAD TESTNET...
                   </p>
+                )}
+
+                {voteError && (
+                  <div className="bg-pixel-black text-pixel-gold p-2 text-xs font-bold text-center border border-pixel-gold">
+                    ℹ INFO ON-CHAIN: Wallet ini sudah pernah memberikan suara vote untuk bencana ini di Monad Testnet! (1 Wallet = 1 Vote)
+                  </div>
                 )}
 
                 {disasterMsg && (
