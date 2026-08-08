@@ -5,13 +5,15 @@ async function main() {
   console.log("DEPLOYING MONADOPOLIS CONTRACT TO MONAD TESTNET");
   console.log("==========================================");
 
-  const [deployer] = await hre.ethers.getSigners();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hardhatEthers = (hre as any).ethers;
+  const [deployer] = await hardhatEthers.getSigners();
   console.log("Deployer Wallet Address:", deployer.address);
 
-  const balance = await hre.ethers.provider.getBalance(deployer.address);
-  console.log("Deployer MON Balance:", hre.ethers.formatEther(balance), "MON");
+  const balance = await hardhatEthers.provider.getBalance(deployer.address);
+  console.log("Deployer MON Balance:", hardhatEthers.formatEther(balance), "MON");
 
-  const Monadopolis = await hre.ethers.getContractFactory("Monadopolis");
+  const Monadopolis = await hardhatEthers.getContractFactory("Monadopolis");
   console.log("Deploying Monadopolis.sol contract...");
 
   const contract = await Monadopolis.deploy();
