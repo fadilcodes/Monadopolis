@@ -1,15 +1,12 @@
-import { NextResponse } from "next/server";
-import { generateAIQuiz } from "@/lib/ai/gemini";
+const AI_DISABLED_MESSAGE =
+  "This is for Hackathon purpose only, no use of API key for any reason";
 
-export async function GET() {
-  try {
-    const quiz = await generateAIQuiz();
-    return NextResponse.json({ success: true, quiz });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal memproses AI Quiz";
-    return NextResponse.json(
-      { success: false, error: errorMessage },
-      { status: 500 }
-    );
-  }
+export function GET() {
+  return Response.json(
+    { success: false, error: AI_DISABLED_MESSAGE },
+    {
+      status: 403,
+      headers: { "Cache-Control": "no-store" },
+    }
+  );
 }
